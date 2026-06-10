@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "AgentHub",
+    "_postman_id": "fa7d9148-5ab5-4df8-a8ab-agenthub001",
+    "description": "Postman collection for AgentHub microservices checkpoint.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "agentCatalogBaseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "deploymentBaseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "customerBaseUrl",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "agentId",
+      "value": "1"
+    },
+    {
+      "key": "deploymentId",
+      "value": "1"
+    },
+    {
+      "key": "customerId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Agent Catalog Service",
+      "item": [
+        {
+          "name": "Create Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Research Assistant Agent\",\n  \"description\": \"Summarizes research papers and extracts key findings.\",\n  \"version\": \"1.0.0\",\n  \"agentType\": \"RESEARCH\",\n  \"provider\": \"OpenAI\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{agentCatalogBaseUrl}}/api/agents",
+              "host": [
+                "{{agentCatalogBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agents"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Agents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{agentCatalogBaseUrl}}/api/agents",
+              "host": [
+                "{{agentCatalogBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agents"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Agent By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{agentCatalogBaseUrl}}/api/agents/{{agentId}}",
+              "host": [
+                "{{agentCatalogBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "{{agentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Agent",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Research Assistant Agent\",\n  \"description\": \"Updated research summarization agent.\",\n  \"version\": \"1.1.0\",\n  \"agentType\": \"RESEARCH\",\n  \"provider\": \"OpenAI\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{agentCatalogBaseUrl}}/api/agents/{{agentId}}",
+              "host": [
+                "{{agentCatalogBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "{{agentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Agent",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{agentCatalogBaseUrl}}/api/agents/{{agentId}}",
+              "host": [
+                "{{agentCatalogBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "{{agentId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Service",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organizationName\": \"Example University Lab\",\n  \"contactName\": \"Test McTestface\",\n  \"email\": \"test.mctestface@example.com\",\n  \"subscriptionPlan\": \"STANDARD\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{customerBaseUrl}}/api/customers",
+              "host": [
+                "{{customerBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{customerBaseUrl}}/api/customers",
+              "host": [
+                "{{customerBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Customer By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{customerBaseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{customerBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organizationName\": \"Updated University Lab\",\n  \"contactName\": \"Test McTestface\",\n  \"email\": \"test.mctestface@example.com\",\n  \"subscriptionPlan\": \"PREMIUM\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{customerBaseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{customerBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{customerBaseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{customerBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deployment Service",
+      "item": [
+        {
+          "name": "Create Deployment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agentId\": 1,\n  \"customerId\": 1,\n  \"deploymentName\": \"research-agent-dev\",\n  \"environmentName\": \"development\",\n  \"region\": \"us-east-1\",\n  \"status\": \"PENDING\",\n  \"requestedBy\": \"test.mctestface@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{deploymentBaseUrl}}/api/deployments",
+              "host": [
+                "{{deploymentBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deployments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Deployments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{deploymentBaseUrl}}/api/deployments",
+              "host": [
+                "{{deploymentBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deployments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Deployment By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{deploymentBaseUrl}}/api/deployments/{{deploymentId}}",
+              "host": [
+                "{{deploymentBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deployments",
+                "{{deploymentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Deployment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agentId\": 1,\n  \"customerId\": 1,\n  \"deploymentName\": \"research-agent-prod\",\n  \"environmentName\": \"production\",\n  \"region\": \"us-east-1\",\n  \"status\": \"RUNNING\",\n  \"requestedBy\": \"test.mctestface@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{deploymentBaseUrl}}/api/deployments/{{deploymentId}}",
+              "host": [
+                "{{deploymentBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deployments",
+                "{{deploymentId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Deployment",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{deploymentBaseUrl}}/api/deployments/{{deploymentId}}",
+              "host": [
+                "{{deploymentBaseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deployments",
+                "{{deploymentId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
