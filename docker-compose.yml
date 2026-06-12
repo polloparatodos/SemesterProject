@@ -67,7 +67,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: ${APP_PROFILE:-dev}
       SPRING_CONFIG_IMPORT: configserver:http://config-service:8888
       AGENT_DB_NAME: ${AGENT_DB_NAME}
       AGENT_DB_USER: ${AGENT_DB_USER}
@@ -87,7 +87,7 @@ services:
     ports:
       - "8082:8082"
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: ${APP_PROFILE:-dev}
       SPRING_CONFIG_IMPORT: configserver:http://config-service:8888
       DEPLOYMENT_DB_NAME: ${DEPLOYMENT_DB_NAME}
       DEPLOYMENT_DB_USER: ${DEPLOYMENT_DB_USER}
@@ -107,7 +107,7 @@ services:
     ports:
       - "8083:8083"
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: ${APP_PROFILE:-dev}
       SPRING_CONFIG_IMPORT: configserver:http://config-service:8888
       CUSTOMER_DB_NAME: ${CUSTOMER_DB_NAME}
       CUSTOMER_DB_USER: ${CUSTOMER_DB_USER}

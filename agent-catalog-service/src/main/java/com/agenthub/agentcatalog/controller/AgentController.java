@@ -23,7 +23,7 @@ public class AgentController {
     }
 
     @GetMapping("/{id}")
-    public Agent getAgentById(@PathVariable Long id) {
+    public Agent getAgentById(@PathVariable("id") Long id) {
         return agentService.findById(id);
     }
 
@@ -34,13 +34,13 @@ public class AgentController {
     }
 
     @PutMapping("/{id}")
-    public Agent updateAgent(@PathVariable Long id, @RequestBody Agent agent) {
+    public Agent updateAgent(@PathVariable("id") Long id, @RequestBody Agent agent) {
         return agentService.update(id, agent);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAgent(@PathVariable Long id) {
+    public void deleteAgent(@PathVariable("id") Long id) {
         agentService.delete(id);
     }
 }

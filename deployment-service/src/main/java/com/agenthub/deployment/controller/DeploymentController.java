@@ -23,7 +23,7 @@ public class DeploymentController {
     }
 
     @GetMapping("/{id}")
-    public Deployment getDeploymentById(@PathVariable Long id) {
+    public Deployment getDeploymentById(@PathVariable("id") Long id) {
         return deploymentService.findById(id);
     }
 
@@ -34,13 +34,13 @@ public class DeploymentController {
     }
 
     @PutMapping("/{id}")
-    public Deployment updateDeployment(@PathVariable Long id, @RequestBody Deployment deployment) {
+    public Deployment updateDeployment(@PathVariable("id") Long id, @RequestBody Deployment deployment) {
         return deploymentService.update(id, deployment);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDeployment(@PathVariable Long id) {
+    public void deleteDeployment(@PathVariable("id") Long id) {
         deploymentService.delete(id);
     }
 }

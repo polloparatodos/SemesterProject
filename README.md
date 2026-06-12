@@ -161,6 +161,29 @@ Example responsibilities:
 - Track subscription plan
 - Delete customer records
 
+## Canonical Model Relationships
+
+The canonical model is split across bounded contexts.
+
+Customer to Deployment relationship:
+
+```text
+Customer 1..* Deployment
+```
+
+Agent to Deployment relationship:
+```text
+Agent 1..* Deployment
+```
+
+The `Deployment` entity stores `agentId` and `customerId`.
+
+The `agentId` field references an Agent owned by the Agent Catalog Service.
+
+The `customerId` field references a Customer owned by the Customer Service.
+
+These are stored as IDs instead of direct JPA relationships because each microservice owns its own database and bounded context. 
+
 ## Technology Stack
 
 - Java 21
@@ -273,7 +296,55 @@ spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=false
 ```
 
+## Running with a Different Profile
+
+By default, Docker Compose runs the domain services with the `dev` profile.
+
+To make the active profile configurable, set `APP_PROFILE` in the environment or `.env` file.
+
+### Running with the Prod profile
+
+#### On macOS, Linux, or Git Bash, run:
+
+```bash
+APP_PROFILE=prod docker compose up --build
+```
+
+#### On Windows PowerShell, run:
+
+```powershell
+$env:APP_PROFILE="prod"
+```
+
+Then run:
+
+```powershell
+docker compose up --build
+```
+
+The `prod` profile is more production-like and disables SQL logging.
+
+If the `prod` profile uses `spring.jpa.hibernate.ddl-auto=validate`, the database schema must already exist before services start.
+
+Note: The `dev` profile is intended for local development. It uses automatic schema updates and SQL logging.
+
 ## Running the System
+
+On macOS, Linux, or Git Bash, run:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+### [Optional]
+
+Edit `.env` if you want to change the database names, password, or APP_PROFILE.
 
 From the project root directory, run:
 
@@ -362,10 +433,20 @@ Expected response:
 
 The configuration server can be tested with:
 
+### Dev Profile
+
 ```text
 GET http://localhost:8888/agent-catalog-service/dev
 GET http://localhost:8888/deployment-service/dev
 GET http://localhost:8888/customer-service/dev
+```
+
+### Prod Profile
+
+```text
+GET http://localhost:8888/agent-catalog-service/prod
+GET http://localhost:8888/deployment-service/prod
+GET http://localhost:8888/customer-service/prod
 ```
 
 These endpoints should return configuration data for each service.
@@ -523,7 +604,7 @@ customerId
 
 ## Suggested Testing Order
 
-### 1. Start Docker Compose.
+### 1. Copy `.env.example` to `.env`, then start Docker Compose.
 
 ```bash
 docker compose up --build
