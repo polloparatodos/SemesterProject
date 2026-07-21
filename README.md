@@ -212,6 +212,7 @@ Optional for local development without Docker:
 
 - Java 21
 - Maven
+- k6
 
 ## Project Structure
 
