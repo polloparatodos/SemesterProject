@@ -13,6 +13,32 @@ services:
     networks:
       - agenthub-network
 
+  discovery-service:
+    build:
+      context: .
+      dockerfile: discovery-service/Dockerfile
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - agenthub-network
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    container_name: gateway-service
+    restart: on-failure
+    depends_on:
+      - discovery-service
+      - config-service
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_URI: http://discovery-service:8761/eureka
+    networks:
+      - agenthub-network
+
   agent-db:
     image: postgres:16
     container_name: agent-db
@@ -55,6 +81,34 @@ services:
     networks:
       - agenthub-network
 
+  auth-db:
+    image: postgres:16
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks:
+      - agenthub-network
+
+  chat-mongodb:
+    image: mongo:7.0
+    container_name: chat-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    ports:
+      - "27017:27017"
+    volumes:
+      - chat-mongodb-data:/data/db
+    networks:
+      - agenthub-network
+
   agent-catalog-service:
     build:
       context: .
@@ -63,6 +117,7 @@ services:
     restart: on-failure
     depends_on:
       - config-service
+      - discovery-service
       - agent-db
     ports:
       - "8081:8081"
@@ -72,6 +127,8 @@ services:
       AGENT_DB_NAME: ${AGENT_DB_NAME}
       AGENT_DB_USER: ${AGENT_DB_USER}
       AGENT_DB_PASSWORD: ${AGENT_DB_PASSWORD}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      EUREKA_URI: http://discovery-service:8761/eureka
     networks:
       - agenthub-network
 
@@ -83,6 +140,7 @@ services:
     restart: on-failure
     depends_on:
       - config-service
+      - discovery-service
       - deployment-db
     ports:
       - "8082:8082"
@@ -92,6 +150,7 @@ services:
       DEPLOYMENT_DB_NAME: ${DEPLOYMENT_DB_NAME}
       DEPLOYMENT_DB_USER: ${DEPLOYMENT_DB_USER}
       DEPLOYMENT_DB_PASSWORD: ${DEPLOYMENT_DB_PASSWORD}
+      EUREKA_URI: http://discovery-service:8761/eureka
     networks:
       - agenthub-network
 
@@ -103,6 +162,7 @@ services:
     restart: on-failure
     depends_on:
       - config-service
+      - discovery-service
       - customer-db
     ports:
       - "8083:8083"
@@ -112,6 +172,51 @@ services:
       CUSTOMER_DB_NAME: ${CUSTOMER_DB_NAME}
       CUSTOMER_DB_USER: ${CUSTOMER_DB_USER}
       CUSTOMER_DB_PASSWORD: ${CUSTOMER_DB_PASSWORD}
+      EUREKA_URI: http://discovery-service:8761/eureka
+    networks:
+      - agenthub-network
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: auth-service
+    restart: on-failure
+    depends_on:
+      - config-service
+      - discovery-service
+      - auth-db
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${APP_PROFILE:-dev}
+      SPRING_CONFIG_IMPORT: configserver:http://config-service:8888
+      AUTH_DB_NAME: ${AUTH_DB_NAME}
+      AUTH_DB_USER: ${AUTH_DB_USER}
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
+      EUREKA_URI: http://discovery-service:8761/eureka
+    networks:
+      - agenthub-network
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: chat-service/Dockerfile
+    container_name: chat-service
+    restart: on-failure
+    depends_on:
+      - config-service
+      - discovery-service
+      - chat-mongodb
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${APP_PROFILE:-dev}
+      SPRING_CONFIG_IMPORT: configserver:http://config-service:8888
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      MONGO_ROOT_USER: ${MONGO_ROOT_USER}
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      EUREKA_URI: http://discovery-service:8761/eureka
     networks:
       - agenthub-network
 
@@ -119,6 +224,8 @@ volumes:
   agent-db-data:
   deployment-db-data:
   customer-db-data:
+  auth-db-data:
+  chat-mongodb-data:
 
 networks:
   agenthub-network:

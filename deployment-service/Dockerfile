@@ -3,9 +3,13 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY config-service ./config-service
+COPY auth-service ./auth-service
 COPY agent-catalog-service ./agent-catalog-service
 COPY deployment-service ./deployment-service
 COPY customer-service ./customer-service
+COPY chat-service ./chat-service
+COPY discovery-service ./discovery-service
+COPY gateway-service ./gateway-service
 
 RUN mvn clean package -pl deployment-service -am -DskipTests
 

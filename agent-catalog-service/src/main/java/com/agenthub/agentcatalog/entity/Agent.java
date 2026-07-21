@@ -1,5 +1,7 @@
 package com.agenthub.agentcatalog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.genai.Chat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,9 +20,13 @@ public class Agent {
     private String agentType;
     private String provider;
     private String status;
-
+    private String sessionId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @Transient
+    @JsonIgnore
+    private Chat chatSession;
 
     public Agent() {
     }
@@ -80,6 +86,9 @@ public class Agent {
         return this;
     }
 
+    public void setSessionId(String sessionId) {this.sessionId = sessionId;}
+
+
     public String getProvider() {
         return provider;
     }
@@ -88,6 +97,11 @@ public class Agent {
         this.provider = provider;
         return this;
     }
+
+    public void setChatSession(Chat chatSession) {
+        this.chatSession = chatSession;
+    }
+    public Chat getChatSession() {return chatSession;}
 
     public String getStatus() {
         return status;
@@ -105,4 +119,7 @@ public class Agent {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+
+    public String getSessionId() {return sessionId;}
 }

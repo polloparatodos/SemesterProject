@@ -1,0 +1,28 @@
+server:
+  port: 8084
+
+spring:
+  data:
+    mongodb:
+      host: chat-mongodb
+      port: 27017
+      database: ${MONGO_DB_NAME}
+      username: ${MONGO_ROOT_USER}
+      password: ${MONGO_ROOT_PASSWORD}
+      authentication-database: admin
+
+auth-service:
+  url: http://auth-service:8086
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://discovery-service:8761/eureka}
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

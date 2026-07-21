@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/agents")
@@ -22,25 +23,38 @@ public class AgentController {
         return agentService.findAll();
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Agent createAgent(@RequestBody Agent agent) {
+        return agentService.createAgent(agent);
+    }
+
     @GetMapping("/{id}")
     public Agent getAgentById(@PathVariable("id") Long id) {
         return agentService.findById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Agent createAgent(@RequestBody Agent agent) {
-        return agentService.create(agent);
-    }
-
     @PutMapping("/{id}")
     public Agent updateAgent(@PathVariable("id") Long id, @RequestBody Agent agent) {
-        return agentService.update(id, agent);
+        return agentService.updateAgent(id, agent);
+    }
+
+    @PostMapping("/load-session")
+    public Agent loadExistingAgentSession(@RequestParam("sessionId") String sessionId) {
+        return agentService.loadExistingAgentSession(sessionId);
+    }
+
+    @PostMapping("/send-message")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String,Object> sendNewMessageToAgent(@RequestBody Map<String,Object> request) {
+        Long agentId = ((Number) request.get("agentId")).longValue();
+        String message = (String) request.get("message");
+        return agentService.sendNewMessageToAgent(agentId, message);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAgent(@PathVariable("id") Long id) {
-        agentService.delete(id);
+        agentService.deleteAgent(id);
     }
 }

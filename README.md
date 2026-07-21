@@ -296,38 +296,6 @@ spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=false
 ```
 
-## Running with a Different Profile
-
-By default, Docker Compose runs the domain services with the `dev` profile.
-
-To make the active profile configurable, set `APP_PROFILE` in the environment or `.env` file.
-
-### Running with the Prod profile
-
-#### On macOS, Linux, or Git Bash, run:
-
-```bash
-APP_PROFILE=prod docker compose up --build
-```
-
-#### On Windows PowerShell, run:
-
-```powershell
-$env:APP_PROFILE="prod"
-```
-
-Then run:
-
-```powershell
-docker compose up --build
-```
-
-The `prod` profile is more production-like and disables SQL logging.
-
-If the `prod` profile uses `spring.jpa.hibernate.ddl-auto=validate`, the database schema must already exist before services start.
-
-Note: The `dev` profile is intended for local development. It uses automatic schema updates and SQL logging.
-
 ## Running the System
 
 On macOS, Linux, or Git Bash, run:
@@ -376,6 +344,38 @@ To stop the containers and remove database volumes:
 ```bash
 docker compose down -v
 ```
+
+## Running with a Different Profile
+
+By default, Docker Compose runs the domain services with the `dev` profile.
+
+To make the active profile configurable, set `APP_PROFILE` in the environment or `.env` file.
+
+### Running with the Prod profile
+
+#### On macOS, Linux, or Git Bash, run:
+
+```bash
+APP_PROFILE=prod docker compose up --build
+```
+
+#### On Windows PowerShell, run:
+
+```powershell
+$env:APP_PROFILE="prod"
+```
+
+Then run:
+
+```powershell
+docker compose up --build
+```
+
+The `prod` profile is more production-like and disables SQL logging.
+
+If the `prod` profile uses `spring.jpa.hibernate.ddl-auto=validate`, the database schema must already exist before services start.
+
+Note: The `dev` profile is intended for local development. It uses automatic schema updates and SQL logging.
 
 ## Checking Container Status
 

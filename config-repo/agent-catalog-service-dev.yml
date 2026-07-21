@@ -13,6 +13,16 @@ spring:
       ddl-auto: update
     show-sql: true
 
+auth-service:
+  url: http://auth-service:8086
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://discovery-service:8761/eureka}
+  instance:
+    prefer-ip-address: true
+
 management:
   endpoints:
     web:
