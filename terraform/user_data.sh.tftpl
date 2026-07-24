@@ -1,0 +1,55 @@
+#!/bin/bash
+set -euxo pipefail
+
+exec > >(tee /var/log/agenthub-bootstrap.log) 2>&1
+
+apt-get update -y
+apt-get install -y ca-certificates curl gnupg git
+
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+  > /etc/apt/sources.list.d/docker.list
+
+apt-get update -y
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+systemctl enable docker
+systemctl start docker
+
+APP_DIR=/opt/agenthub
+rm -rf "$APP_DIR"
+git clone --branch "${git_branch}" --depth 1 "${github_repo_url}" "$APP_DIR"
+
+cat > "$APP_DIR/.env" <<EOF
+APP_PROFILE=${app_profile}
+
+AGENT_DB_NAME=${agent_db_name}
+AGENT_DB_USER=${agent_db_user}
+AGENT_DB_PASSWORD=${agent_db_password}
+
+DEPLOYMENT_DB_NAME=${deployment_db_name}
+DEPLOYMENT_DB_USER=${deployment_db_user}
+DEPLOYMENT_DB_PASSWORD=${deployment_db_password}
+
+CUSTOMER_DB_NAME=${customer_db_name}
+CUSTOMER_DB_USER=${customer_db_user}
+CUSTOMER_DB_PASSWORD=${customer_db_password}
+
+MONGO_DB_NAME=${mongo_db_name}
+MONGO_ROOT_USER=${mongo_root_user}
+MONGO_ROOT_PASSWORD=${mongo_root_password}
+
+AUTH_DB_NAME=${auth_db_name}
+AUTH_DB_USER=${auth_db_user}
+AUTH_DB_PASSWORD=${auth_db_password}
+
+GOOGLE_API_KEY=${google_api_key}
+EOF
+chmod 600 "$APP_DIR/.env"
+
+cd "$APP_DIR"
+docker compose up --build -d
