@@ -42,6 +42,7 @@ services:
   agent-db:
     image: postgres:16
     container_name: agent-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${AGENT_DB_NAME}
       POSTGRES_USER: ${AGENT_DB_USER}
@@ -56,6 +57,7 @@ services:
   deployment-db:
     image: postgres:16
     container_name: deployment-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DEPLOYMENT_DB_NAME}
       POSTGRES_USER: ${DEPLOYMENT_DB_USER}
@@ -70,6 +72,7 @@ services:
   customer-db:
     image: postgres:16
     container_name: customer-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${CUSTOMER_DB_NAME}
       POSTGRES_USER: ${CUSTOMER_DB_USER}
@@ -84,6 +87,7 @@ services:
   auth-db:
     image: postgres:16
     container_name: auth-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${AUTH_DB_NAME}
       POSTGRES_USER: ${AUTH_DB_USER}
@@ -98,6 +102,7 @@ services:
   chat-mongodb:
     image: mongo:7.0
     container_name: chat-mongodb
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
