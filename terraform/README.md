@@ -8,7 +8,7 @@ this repo, and runs the existing `docker-compose.yml` as-is (all 7 services +
 ## Prerequisites
 
 - Terraform >= 1.5
-- AWS credentials configured (`aws configure`, or env vars / SSO profile) with
+- AWS credentials are configured (`aws configure`, or env vars / SSO profile) with
   permission to manage EC2, security groups, and key pairs
 - A local SSH keypair (defaults to `~/.ssh/id_ed25519.pub` — generate one with
   `ssh-keygen -t ed25519` if you don't have one)
@@ -27,7 +27,7 @@ terraform init
 terraform apply
 ```
 
-Boot + build takes a few minutes (Maven builds all 7 services on first boot).
+Boot and build take a few minutes (Maven builds all seven (7) services on the first boot).
 Watch progress with:
 
 ```bash
