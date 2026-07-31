@@ -34,9 +34,15 @@ variable "public_key_path" {
 }
 
 variable "github_repo_url" {
-  description = "Git URL the instance clones at boot"
+  description = "Git SSH URL the instance clones at boot. Repo is private, so this must be the git@github.com:... SSH form, cloned using deploy_key_path."
   type        = string
-  default     = "https://github.com/polloparatodos/SemesterProject.git"
+  default     = "git@github.com:polloparatodos/SemesterProject.git"
+}
+
+variable "deploy_key_path" {
+  description = "Path to a local private key registered as a read-only GitHub Deploy Key on the repo, used by the instance to clone it. Generate with: ssh-keygen -t ed25519 -f ~/.ssh/agenthub_deploy_key -N '' -C agenthub-terraform-deploy-key"
+  type        = string
+  default     = "~/.ssh/agenthub_deploy_key"
 }
 
 variable "git_branch" {

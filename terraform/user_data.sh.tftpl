@@ -20,9 +20,17 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 systemctl enable docker
 systemctl start docker
 
+install -m 0700 -d /root/.ssh
+cat > /root/.ssh/agenthub_deploy_key <<'DEPLOYKEY'
+${deploy_key}
+DEPLOYKEY
+chmod 600 /root/.ssh/agenthub_deploy_key
+ssh-keyscan -t ed25519 github.com >> /root/.ssh/known_hosts 2>/dev/null
+
 APP_DIR=/opt/agenthub
 rm -rf "$APP_DIR"
-git clone --branch "${git_branch}" --depth 1 "${github_repo_url}" "$APP_DIR"
+GIT_SSH_COMMAND="ssh -i /root/.ssh/agenthub_deploy_key -o UserKnownHostsFile=/root/.ssh/known_hosts" \
+  git clone --branch "${git_branch}" --depth 1 "${github_repo_url}" "$APP_DIR"
 
 cat > "$APP_DIR/.env" <<EOF
 APP_PROFILE=${app_profile}

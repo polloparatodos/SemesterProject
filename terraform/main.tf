@@ -138,6 +138,7 @@ resource "aws_instance" "this" {
 
   user_data = templatefile("${path.module}/user_data.sh.tftpl", {
     github_repo_url        = var.github_repo_url
+    deploy_key             = file(pathexpand(var.deploy_key_path))
     git_branch             = var.git_branch
     app_profile            = var.app_profile
     agent_db_name          = var.agent_db_name
