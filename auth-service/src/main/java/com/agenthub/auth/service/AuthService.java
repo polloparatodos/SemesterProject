@@ -59,14 +59,17 @@ public class AuthService {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        // Check if customer already has an auth account
-        if (authUserRepository.existsByCustomerId(request.getCustomerId())) {
-            throw new IllegalArgumentException("Customer already has an authentication account");
-        }
+        // Only validate customer if customerId is provided
+        if (request.getCustomerId() != null) {
+            // Check if customer already has an auth account
+            if (authUserRepository.existsByCustomerId(request.getCustomerId())) {
+                throw new IllegalArgumentException("Customer already has an authentication account");
+            }
 
-        // Validate customer exists
-        if (!customerServiceClient.validateCustomerExists(request.getCustomerId())) {
-            throw new CustomerNotFoundException("Customer ID " + request.getCustomerId() + " not found");
+            // Validate customer exists
+            if (!customerServiceClient.validateCustomerExists(request.getCustomerId())) {
+                throw new CustomerNotFoundException("Customer ID " + request.getCustomerId() + " not found");
+            }
         }
 
         // Create new auth user

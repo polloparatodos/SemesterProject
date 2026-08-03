@@ -32,10 +32,13 @@ services:
     depends_on:
       - discovery-service
       - config-service
+      - zipkin
     ports:
       - "8080:8080"
     environment:
       EUREKA_URI: http://discovery-service:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 
@@ -114,6 +117,47 @@ services:
     networks:
       - agenthub-network
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - agenthub-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - agenthub-network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    restart: unless-stopped
+    ports:
+      - "9411:9411"
+    networks:
+      - agenthub-network
+
   agent-catalog-service:
     build:
       context: .
@@ -124,6 +168,8 @@ services:
       - config-service
       - discovery-service
       - agent-db
+      - kafka
+      - zipkin
     ports:
       - "8081:8081"
     environment:
@@ -134,6 +180,9 @@ services:
       AGENT_DB_PASSWORD: ${AGENT_DB_PASSWORD}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
       EUREKA_URI: http://discovery-service:8761/eureka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 
@@ -213,6 +262,8 @@ services:
       - config-service
       - discovery-service
       - chat-mongodb
+      - kafka
+      - zipkin
     ports:
       - "8084:8084"
     environment:
@@ -222,6 +273,9 @@ services:
       MONGO_ROOT_USER: ${MONGO_ROOT_USER}
       MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
       EUREKA_URI: http://discovery-service:8761/eureka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 

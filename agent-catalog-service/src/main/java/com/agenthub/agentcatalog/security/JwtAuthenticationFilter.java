@@ -35,10 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String requestPath = request.getRequestURI();
+        logger.info("Processing request: {} {}", request.getMethod(), requestPath);
+
         try {
             String token = extractToken(request);
+            logger.info("Token extracted: {}", token != null ? "YES" : "NO");
 
             if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                logger.info("Parsing JWT token for path: {}", requestPath);
                 Claims claims = Jwts.parser()
                         .verifyWith(jwtPublicKeyProvider.getPublicKey())
                         .build()
@@ -56,10 +61,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.debug("JWT authentication successful for user: {}, customerId: {}", username, customerId);
+                logger.info("JWT authentication successful for user: {}, path: {}", username, requestPath);
+            } else if (token == null) {
+                logger.warn("No token found for path: {}", requestPath);
             }
         } catch (Exception e) {
-            logger.error("JWT authentication failed: {}", e.getMessage());
+            logger.error("JWT authentication failed for path {}: {}", requestPath, e.getMessage());
         }
 
         filterChain.doFilter(request, response);

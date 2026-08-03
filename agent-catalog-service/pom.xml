@@ -50,12 +50,6 @@
             <artifactId>google-genai</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.agenthub</groupId>
-            <artifactId>chat-service</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -79,6 +73,22 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.12.6</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- Distributed Tracing -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.reporter2</groupId>
+            <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
     </dependencies>
 

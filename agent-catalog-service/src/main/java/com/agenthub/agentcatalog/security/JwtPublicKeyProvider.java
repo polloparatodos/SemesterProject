@@ -22,7 +22,7 @@ public class JwtPublicKeyProvider {
 
     private PublicKey publicKey;
 
-    @Value("${auth-service.url:http://auth-service:8080}")
+    @Value("${auth-service.url:http://auth-service:8086}")
     private String authServiceUrl;
 
     @PostConstruct

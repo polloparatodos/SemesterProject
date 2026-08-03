@@ -1,0 +1,501 @@
+{
+	"info": {
+		"_postman_id": "agenthub-collection-001",
+		"name": "AgentHub API Collection",
+		"description": "Complete API collection for AgentHub microservices - includes health checks, agent communication, session management, and chat history",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "Gateway Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/actuator/health",
+							"host": ["{{gateway_url}}"],
+							"path": ["actuator", "health"]
+						},
+						"description": "Check if Gateway Service is running and healthy"
+					}
+				},
+				{
+					"name": "Agent Catalog Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{agent_catalog_url}}/actuator/health",
+							"host": ["{{agent_catalog_url}}"],
+							"path": ["actuator", "health"]
+						},
+						"description": "Check if Agent Catalog Service is running and healthy"
+					}
+				},
+				{
+					"name": "Chat Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{chat_service_url}}/actuator/health",
+							"host": ["{{chat_service_url}}"],
+							"path": ["actuator", "health"]
+						},
+						"description": "Check if Chat Service is running and healthy"
+					}
+				},
+				{
+					"name": "Auth Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{auth_service_url}}/actuator/health",
+							"host": ["{{auth_service_url}}"],
+							"path": ["actuator", "health"]
+						},
+						"description": "Check if Auth Service is running and healthy"
+					}
+				},
+				{
+					"name": "Discovery Service Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{discovery_url}}/actuator/health",
+							"host": ["{{discovery_url}}"],
+							"path": ["actuator", "health"]
+						},
+						"description": "Check if Eureka Discovery Service is running and healthy"
+					}
+				}
+			],
+			"description": "Health check endpoints for all services"
+		},
+		{
+			"name": "Agent Communication",
+			"item": [
+				{
+					"name": "Send Message to Agent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"agentId\": \"{{agent_id}}\",\n  \"message\": \"Hello, agent! What can you help me with?\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/agents/send-message",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents", "send-message"]
+						},
+						"description": "Send a message to an agent and receive a response"
+					}
+				},
+				{
+					"name": "Send Message (Direct to Service)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"agentId\": \"{{agent_id}}\",\n  \"message\": \"Hello, agent!\"\n}"
+						},
+						"url": {
+							"raw": "{{agent_catalog_url}}/api/agents/send-message",
+							"host": ["{{agent_catalog_url}}"],
+							"path": ["api", "agents", "send-message"]
+						},
+						"description": "Send message directly to agent catalog service (bypassing gateway)"
+					}
+				}
+			],
+			"description": "Endpoints for communicating with agents"
+		},
+		{
+			"name": "Session Management",
+			"item": [
+				{
+					"name": "Load Agent Session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/agents/load-session?sessionId={{session_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents", "load-session"],
+							"query": [
+								{
+									"key": "sessionId",
+									"value": "{{session_id}}",
+									"description": "The session ID to restore"
+								}
+							]
+						},
+						"description": "Restore an old agent session by session ID"
+					}
+				},
+				{
+					"name": "Load Session (Direct to Service)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{agent_catalog_url}}/api/agents/load-session?sessionId={{session_id}}",
+							"host": ["{{agent_catalog_url}}"],
+							"path": ["api", "agents", "load-session"],
+							"query": [
+								{
+									"key": "sessionId",
+									"value": "{{session_id}}",
+									"description": "The session ID to restore"
+								}
+							]
+						},
+						"description": "Restore session directly via agent catalog service"
+					}
+				}
+			],
+			"description": "Endpoints for managing and restoring agent sessions"
+		},
+		{
+			"name": "Chat History",
+			"item": [
+				{
+					"name": "Get Chat History by Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/messages/session/{{session_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "messages", "session", "{{session_id}}"]
+						},
+						"description": "Retrieve all chat messages for a specific session from MongoDB"
+					}
+				},
+				{
+					"name": "Get Chat History (Direct to Service)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{chat_service_url}}/api/messages/session/{{session_id}}",
+							"host": ["{{chat_service_url}}"],
+							"path": ["api", "messages", "session", "{{session_id}}"]
+						},
+						"description": "Retrieve chat history directly from chat service"
+					}
+				},
+				{
+					"name": "Get Message Count by Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/messages/session/{{session_id}}/count",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "messages", "session", "{{session_id}}", "count"]
+						},
+						"description": "Get the total number of messages in a session"
+					}
+				},
+				{
+					"name": "Save Chat Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{session_id}}\",\n  \"senderId\": \"user123\",\n  \"content\": \"This is a test message\",\n  \"timestamp\": \"2026-08-01T12:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/messages",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "messages"]
+						},
+						"description": "Save a new chat message to MongoDB"
+					}
+				},
+				{
+					"name": "Delete Chat History by Session",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/messages/session/{{session_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "messages", "session", "{{session_id}}"]
+						},
+						"description": "Delete all messages for a specific session"
+					}
+				}
+			],
+			"description": "Endpoints for managing chat history stored in MongoDB"
+		},
+		{
+			"name": "Agent Management",
+			"item": [
+				{
+					"name": "Get All Agents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/agents",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents"]
+						},
+						"description": "Retrieve all agents from the catalog"
+					}
+				},
+				{
+					"name": "Get Agent by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/agents/{{agent_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents", "{{agent_id}}"]
+						},
+						"description": "Retrieve a specific agent by ID"
+					}
+				},
+				{
+					"name": "Create Agent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Customer Support Agent\",\n  \"description\": \"Handles customer inquiries and support tickets\",\n  \"capabilities\": [\"chat\", \"email\", \"ticketing\"],\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/agents",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents"]
+						},
+						"description": "Create a new agent in the catalog"
+					}
+				},
+				{
+					"name": "Update Agent",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Agent Name\",\n  \"description\": \"Updated description\",\n  \"capabilities\": [\"chat\", \"email\"],\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/agents/{{agent_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents", "{{agent_id}}"]
+						},
+						"description": "Update an existing agent"
+					}
+				},
+				{
+					"name": "Delete Agent",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/api/agents/{{agent_id}}",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "agents", "{{agent_id}}"]
+						},
+						"description": "Delete an agent from the catalog"
+					}
+				}
+			],
+			"description": "Endpoints for managing agents in the catalog"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/auth/register",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new user"
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"SecurePassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/api/auth/login",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Authenticate user and get JWT token"
+					}
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{gateway_url}}/api/auth/me",
+							"host": ["{{gateway_url}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "Get current authenticated user information"
+					}
+				}
+			],
+			"description": "Authentication and user management endpoints"
+		},
+		{
+			"name": "Service Info",
+			"item": [
+				{
+					"name": "Gateway Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/actuator/info",
+							"host": ["{{gateway_url}}"],
+							"path": ["actuator", "info"]
+						},
+						"description": "Get Gateway Service information"
+					}
+				},
+				{
+					"name": "Agent Catalog Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{agent_catalog_url}}/actuator/info",
+							"host": ["{{agent_catalog_url}}"],
+							"path": ["actuator", "info"]
+						},
+						"description": "Get Agent Catalog Service information"
+					}
+				},
+				{
+					"name": "Chat Service Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{chat_service_url}}/actuator/info",
+							"host": ["{{chat_service_url}}"],
+							"path": ["actuator", "info"]
+						},
+						"description": "Get Chat Service information"
+					}
+				}
+			],
+			"description": "Service information endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "gateway_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "agent_catalog_url",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "chat_service_url",
+			"value": "http://localhost:8084",
+			"type": "string"
+		},
+		{
+			"key": "auth_service_url",
+			"value": "http://localhost:8086",
+			"type": "string"
+		},
+		{
+			"key": "discovery_url",
+			"value": "http://localhost:8761",
+			"type": "string"
+		},
+		{
+			"key": "agent_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "session-123",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
