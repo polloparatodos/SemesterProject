@@ -12,8 +12,14 @@ this repo, and runs the existing `docker-compose.yml` as-is (all 7 services +
   permission to manage EC2, security groups, and key pairs
 - A local SSH keypair (defaults to `~/.ssh/id_ed25519.pub` — generate one with
   `ssh-keygen -t ed25519` if you don't have one)
-- This repo pushed to GitHub and public (or reachable) at the URL in
-  `github_repo_url` — the instance `git clone`s it at boot
+- A GitHub deploy key, since the repo is private. Generate one and register it
+  as a **read-only** Deploy Key on the repo (Settings → Deploy keys → Add deploy key):
+  ```bash
+  ssh-keygen -t ed25519 -f ~/.ssh/agenthub_deploy_key -N "" -C agenthub-terraform-deploy-key
+  cat ~/.ssh/agenthub_deploy_key.pub   # paste this in as the deploy key
+  ```
+  The instance uses the private half (`deploy_key_path`, default
+  `~/.ssh/agenthub_deploy_key`) to `git clone` over SSH at boot.
 
 ## Deploy
 
