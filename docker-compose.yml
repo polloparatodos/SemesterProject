@@ -196,6 +196,7 @@ services:
       - config-service
       - discovery-service
       - deployment-db
+      - zipkin
     ports:
       - "8082:8082"
     environment:
@@ -205,6 +206,8 @@ services:
       DEPLOYMENT_DB_USER: ${DEPLOYMENT_DB_USER}
       DEPLOYMENT_DB_PASSWORD: ${DEPLOYMENT_DB_PASSWORD}
       EUREKA_URI: http://discovery-service:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 
@@ -218,6 +221,7 @@ services:
       - config-service
       - discovery-service
       - customer-db
+      - zipkin
     ports:
       - "8083:8083"
     environment:
@@ -227,6 +231,8 @@ services:
       CUSTOMER_DB_USER: ${CUSTOMER_DB_USER}
       CUSTOMER_DB_PASSWORD: ${CUSTOMER_DB_PASSWORD}
       EUREKA_URI: http://discovery-service:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 
@@ -240,6 +246,7 @@ services:
       - config-service
       - discovery-service
       - auth-db
+      - zipkin
     ports:
       - "8086:8086"
     environment:
@@ -249,6 +256,8 @@ services:
       AUTH_DB_USER: ${AUTH_DB_USER}
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
       EUREKA_URI: http://discovery-service:8761/eureka
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: 1.0
     networks:
       - agenthub-network
 
