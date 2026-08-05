@@ -1,9 +1,9 @@
 # AgentHub — Terraform (AWS)
 
 Provisions a single EC2 instance in your default VPC, installs Docker, clones
-this repo, and runs the existing `docker-compose.yml` as-is (all 7 services +
-4 Postgres containers + MongoDB, same as local dev). State lives locally, so
-`terraform destroy` tears everything back down.
+this repo, and runs the existing `docker-compose.yml` as-is (all 8 services +
+4 Postgres containers + MongoDB + Kafka/Zookeeper + Zipkin, same as local
+dev). State lives locally, so `terraform destroy` tears everything back down.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ terraform init
 terraform apply
 ```
 
-Boot and build take a few minutes (Maven builds all seven (7) services on the first boot).
+Boot and build take a few minutes (Maven builds all eight (8) services on the first boot).
 Watch progress with:
 
 ```bash
